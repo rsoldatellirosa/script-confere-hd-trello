@@ -1,0 +1,4 @@
+[
+  {"name": "SERVIDOR_1", "password": "senha_aqui", "ip": "000.000.000.000"},
+  {"name": "SERVIDOR_2", "password": "senha_aqui", "ip": "000.000.000.001"}
+]

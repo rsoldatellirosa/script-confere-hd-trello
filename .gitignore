@@ -1,0 +1,15 @@
+# Arquivos com credenciais — NUNCA subir para o GitHub
+.env
+servers.json
+checklist_items.json
+
+# Relatorios gerados pelo script
+disk_reports/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+venv/
+.venv/
