@@ -96,7 +96,7 @@ SKIP_FS = ("tmpfs", "devtmpfs", "udev", "cgroupfs", "overlay", "none")
 
 def check_server(name, password, ip):
     client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.set_missing_host_key_policy(paramiko.WarningPolicy())
     try:
         client.connect(
             hostname=ip,
@@ -179,8 +179,8 @@ def update_checklist_item(item_id, new_name, retries=3):
             return False
 
 
-def build_item_name(name, password, ip, pct_str):
-    return f"{name} ({password}) ----- {ip} ----- **{pct_str}**"
+def build_item_name(name, ip, pct_str):
+    return f"{name} ----- {ip} ----- **{pct_str}**"
 
 
 def update_trello(results, checklist_items):
@@ -196,9 +196,9 @@ def update_trello(results, checklist_items):
         if not item_id:
             continue
         if data["error"]:
-            new_name = f"{data['name']} ({data['password']}) ----- {ip} ----- **ERRO SSH**"
+            new_name = f"{data['name']} ----- {ip} ----- **ERRO SSH**"
         else:
-            new_name = build_item_name(data["name"], data["password"], ip, data["pct_str"])
+            new_name = build_item_name(data["name"], ip, data["pct_str"])
         tasks[item_id] = new_name
 
     updated = 0
@@ -256,7 +256,7 @@ def main():
                 "filesystem": "", "size": "", "used": "", "available": "",
                 "use_pct": "", "mountpoint": "", "status": f"ERRO_SSH: {error}",
             })
-            results[ip] = {"name": name, "password": password, "pct": -1, "pct_str": "ERRO", "error": True}
+            results[ip] = {"name": name, "pct": -1, "pct_str": "ERRO", "error": True}
             err_count += 1
             continue
 
@@ -269,7 +269,6 @@ def main():
         root_disk = next((d for d in disks if d["mountpoint"] == "/"), disks[0])
         results[ip] = {
             "name": name,
-            "password": password,
             "pct": root_disk["use_pct"],
             "pct_str": root_disk["use_pct_str"],
             "error": False,
